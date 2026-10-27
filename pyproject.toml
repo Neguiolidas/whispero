@@ -1,14 +1,14 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "whispero"
-version = "0.7.0"
+version = "0.8.0"
 description = "Universal audio transcription and deep analysis - fully offline local mode, Gemini native audio, plus any OpenAI-compatible API"
 readme = "README.md"
 authors = [{name = "Neguiolidas"}]
-license = {text = "Apache-2.0"}
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 keywords = ["audio", "transcription", "whisper", "speech-to-text", "ai-agents", "gemini"]
 classifiers = [
@@ -27,6 +27,9 @@ dependencies = []
 diarize = ["pyannote.audio>=3.0"]
 local = [
     "faster-whisper>=1.1",
+    # faster-whisper 1.2.1 breaks with av 19 (decode_audio uses metadata_errors,
+    # removed in av 19); 12.3.0 is the version tested here.
+    "av==12.3.0",
     "onnxruntime>=1.17",
     "huggingface_hub>=0.20",
     "numpy>=1.24",

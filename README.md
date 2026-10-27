@@ -145,6 +145,10 @@ The remaining misses are short interjections said over someone else
 out too low. Pass `--num-speakers` if you know it (5-voice test at 5 dB:
 28/43 automatic, 40/43 with `--num-speakers 5`).
 
+A separate base-model comparison on the same 2 audios, local base vs
+Gemini vs ffmpeg9-whisper, with WER and speaker accuracy, is in
+[BENCHMARK-LOCAL-BASE.md](BENCHMARK-LOCAL-BASE.md).
+
 ## Hands-free dictation
 
 Hold a hotkey, speak, release: the text lands in whatever app has focus
