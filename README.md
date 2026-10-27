@@ -145,9 +145,43 @@ The remaining misses are short interjections said over someone else
 out too low. Pass `--num-speakers` if you know it (5-voice test at 5 dB:
 28/43 automatic, 40/43 with `--num-speakers 5`).
 
-A separate base-model comparison on the same 2 audios, local base vs
-Gemini vs ffmpeg9-whisper, with WER and speaker accuracy, is in
-[BENCHMARK-LOCAL-BASE.md](BENCHMARK-LOCAL-BASE.md).
+### Base-model comparison: local native mode vs Gemini vs ffmpeg9-whisper (2026-10-27)
+
+Same 2 audios, same scoring script, same normalizer for all 3 systems
+(lowercase, punctuation to space, accents kept). WER is word error rate
+against the answer key; lower is better. Speaker accuracy is per turn, by
+largest time overlap; only Whispero has diarization in this mode, so
+Gemini and ffmpeg are text-only and show N/A, never 0. Wall time is
+elapsed time per run; RTF is wall time divided by audio duration.
+
+- 3 voices: 134.16 s, 28 turns, 302 words in the answer key
+  (MARCOS, BIA, LEO).
+- 5 voices: 172.38 s, 43 turns, 436 words in the answer key
+  (ANA, TATI, RAFA, PAULO, CAROL), two scenes: a noisy bar and a video call.
+- Whispero local 0.8.0, clean install:
+  `whispero --provider local --model base --lang pt --diarize --format json`
+- Gemini `gemini-3.1-flash-lite`, faithful transcription prompt, text only.
+- ffmpeg9-whisper, FFmpeg 9.0 with whisper.cpp, model `ggml-base.bin`,
+  `language=pt`, `format=json` (sequential segments, no SRT window overlap).
+
+| System | Audio | WER | Speaker accuracy | Speakers detected | Wall time | RTF |
+|---|---|---|---|---|---|---|
+| Whispero local 0.8.0 base | 3 voices | 8.9% | 27/28, 96.4% | 3 of 3 | 33.9 s | 0.25 |
+| Gemini gemini-3.1-flash-lite | 3 voices | 6.6% | N/A, text only | N/A | 4.8 s | 0.04 |
+| ffmpeg9-whisper ggml-base | 3 voices | 30.1% | N/A, text only | N/A | 128.8 s | 0.96 |
+| Whispero local 0.8.0 base | 5 voices | 14.0% | 38/43, 88.4% | 5 of 5 | 39.4 s | 0.23 |
+| Gemini gemini-3.1-flash-lite | 5 voices | 8.0% | N/A, text only | N/A | 5.3 s | 0.03 |
+| ffmpeg9-whisper ggml-base | 5 voices | 28.9% | N/A, text only | N/A | 149.2 s | 0.87 |
+
+Reading: Gemini wins on text in both audios, Whispero is second on text
+and the only system here that identifies speakers, and ffmpeg is far
+behind on both counts despite a base model of the same size. The
+Whispero-to-Gemini gap grows with speaker count: 2.3 points on 3 voices,
+6.0 points on 5 voices. Caveats: Gemini wall time is API round-trip time,
+not local compute, and it needs internet and a key, while Whispero runs
+fully offline; Gemini varied between two runs (7.0% to 6.6% on 3 voices,
+7.8% to 8.0% on 5 voices), while Whispero and ffmpeg repeated their exact
+WER on both runs.
 
 ## Hands-free dictation
 

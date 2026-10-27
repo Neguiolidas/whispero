@@ -6,8 +6,8 @@
   the deprecated `license = {text}` form
 - packaging: extra `local` pins `av==12.3.0`, because faster-whisper 1.2.1
   breaks with av 19 on a clean install (`metadata_errors` removed)
-- docs: new base-model benchmark, local base vs Gemini vs ffmpeg9-whisper
-  on the 3-voice and 5-voice audios (see BENCHMARK-LOCAL-BASE.md)
+- docs: base-model benchmark data, local base vs Gemini vs ffmpeg9-whisper
+  on the 3-voice and 5-voice audios, in the README benchmark section
 - tests: 57/57 passing
 
 ## v0.7.0 (2026-10-22)
